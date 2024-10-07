@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameStarter : MonoBehaviour
 {
     public WorldMB WorldMB;
     public CameraController CameraController;
+
+    public Selecter Selecter;
 
     public static GameStarter Instance { get; private set; }
 

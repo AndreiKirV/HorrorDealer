@@ -10,6 +10,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float _moveHeightSpeed = 1f;
     [SerializeField] private float2 _Y =  new (0f,50f);
 
+    public bool IsRotate => _isRotate;
+
     private InputSettings _input;
     private bool _isRotate = false;
 
@@ -60,6 +62,9 @@ public class CameraController : MonoBehaviour
 
     private void OnMouseDeltaChanged(InputAction.CallbackContext context)
     {
+        if(GameStarter.Instance.Selecter.SeclectedItem)
+        return;
+
         if (_isRotate)
         {
             Vector2 mouseDelta = context.ReadValue<Vector2>();
