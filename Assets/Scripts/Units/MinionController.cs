@@ -26,7 +26,7 @@ public class MinionController : UnitController
 
     public void Select()
     {
-        Debug.Log("Жмакнули");
+        //Debug.Log("Жмакнули");
         MB.Outline.enabled = !MB.Outline.enabled;
         
         _input.Mouse.RB.canceled += GoMove;
@@ -34,14 +34,14 @@ public class MinionController : UnitController
 
     public void Deselect()
     {
-        Debug.Log("сняли");
+        //Debug.Log("сняли");
         MB.Outline.enabled = !MB.Outline.enabled;
         _input.Mouse.RB.canceled -= GoMove;
     }
 
     private void GoMove(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        Debug.Log("поехал");
+        //Debug.Log("поехал");
         /* if (!_selectElement.IsSelected)
             return; */
 
