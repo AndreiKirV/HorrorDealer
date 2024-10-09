@@ -1,24 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 public abstract class State
 {
     protected StateMachine _stateMachine;
-    protected StateInfo _stateInfo;
-    protected UnitController _unitController;
+    protected MinionController _unitController;
 
-    protected State(StateMachine stateMachine, UnitController unitController)
+    protected State(StateMachine stateMachine, MinionController unitController)
     {
         _stateMachine = stateMachine;
         _unitController = unitController;
     }
 
-    public virtual void Entry(StateInfo cfg = null)
+    public virtual void Entry()
     {
-        _stateInfo = cfg;
+        _unitController.MB.StateInfo.text = GetType().Name;
+        Debug.Log(GetType().Name);
     }
 
     public virtual void OnTriggerEnter(Collider other)
@@ -35,5 +32,6 @@ public abstract class State
 
     public virtual void Exit()
     {
+        _unitController.MB.StateInfo.text = null;
     }
 }

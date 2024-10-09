@@ -1,47 +1,96 @@
+using System;
 using UnityEngine;
 
 public class Selecter : MonoBehaviour
 {
-    public UiController UiController;
-    public GameObject PointPref;
+    [SerializeField]
+    private Setting _settings;
 
-    public MonoBehaviour SeclectedItem => _selectedItem;
+    [Serializable]
+    public class Setting
+    {
+        public UiController UiController;
+        public GameObject PointPref;
+        public LayerMask LayerMask;
+    }
 
-    private MonoBehaviour _selectedItem;
+    public SelectItem SeclectedItem => _selectedItem;
+    //public MonoBehaviour _previousSelectedItem;
+    private SelectItem _selectedItem;
+    //private GameObject _point;
+    private InputSettings _input;
     private GameObject _point;
 
-    public void SetSelected(MonoBehaviour selectedItem)
+    private void Awake()
     {
-        _selectedItem = selectedItem;
-        UiController.SetTextInfo(selectedItem.gameObject.name);
+        _input = new InputSettings();
+        _input.Enable();
+        _input.Mouse.LB.started += TrySelected;
+    }
 
-        if(!_point)
-        _point = Instantiate(PointPref);
-
-        _point.gameObject.SetActive(true);
+    private void Start()
+    {
+        _point = Instantiate(_settings.PointPref);
+        _point.SetActive(false);
     }
 
     private void Update()
     {
-        if (_selectedItem)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+    }
 
-            if (Physics.Raycast(ray, out hit))
+    //TODO кайфуй - ковыряйся
+    public void TrySelected(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        //Debug.Log("TrySelected LB");
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity, _settings.LayerMask);
+
+        if (hits.Length > 1)
+        {
+            //Debug.Log($"первый {hits[0].collider.gameObject.name} последний {hits[hits.Length - 1].collider.gameObject.name} из {hits.Length}");
+
+            foreach (RaycastHit hit in hits)
             {
-                _point.transform.position = hit.point;
+                if (hit.collider.TryGetComponent<SelectItem>(out SelectItem item))
+                {
+                    _settings.UiController.SetTextInfo(item.gameObject.name);
+                    Select(item);
+                    return;
+                }
             }
+        }
+        else if (_selectedItem)
+        {
+            MinionController temp = _selectedItem.MB as MinionController;
+
+            if(!temp || !temp.IsControlled)
+            Deselect();
         }
     }
 
-    public void ResetSelected(MonoBehaviour selectedItem)
+    private void Select(SelectItem item)
     {
-        if (selectedItem != _selectedItem)
-            return;
+        if (_selectedItem)
+        {
+            _selectedItem.Deselected();
 
+            MinionController tempMinion = _selectedItem.MB as MinionController;
+            ItemMB tempItem = item.MB as ItemMB;
+
+            if(tempMinion && tempItem && !tempMinion.IsControlled)
+            tempMinion.TrySetFetter(tempItem);
+
+            Debug.Log($"выбран {_selectedItem.MB.GetType()} пытаетесь выбрать {item.MB.GetType()}");
+        }
+
+        _selectedItem = item;
+        _selectedItem.Selected();
+    }
+
+    private void Deselect()
+    {
+        _selectedItem?.Deselected();
         _selectedItem = null;
-        UiController.SetTextInfo(null);
-        _point.gameObject.SetActive(false);
+        _settings.UiController.SetTextInfo(null);
     }
 }

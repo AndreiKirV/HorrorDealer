@@ -11,5 +11,26 @@ public class UnitController : MonoBehaviour
             _selectElement = gameObject.AddComponent<SelectItem>();
 
         _selectElement.Init(this);
+
+    }
+
+    protected virtual void Start()
+    {
+        GameStarter.Instance.Settings.Traceables.Units.Add(this);
+    }
+
+    protected virtual void OnDestroy()
+    {
+        GameStarter.Instance.Settings.Traceables.Units.Remove(this);
+    }
+
+    protected virtual void OnDisable()
+    {
+        GameStarter.Instance.Settings.Traceables.Units.Remove(this);
+    }
+
+    protected virtual void OnEnable()
+    {
+
     }
 }

@@ -270,6 +270,34 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""Hotkeys"",
+            ""id"": ""191d79d3-2691-42e0-b9bc-9dc84b6906f2"",
+            ""actions"": [
+                {
+                    ""name"": ""AllSelect"",
+                    ""type"": ""Button"",
+                    ""id"": ""2936ad02-c886-487f-b67e-da427ecfe7e6"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""eef61dc9-4ac0-4a31-b192-4cdfddf48918"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AllSelect"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -283,12 +311,16 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
         m_Move = asset.FindActionMap("Move", throwIfNotFound: true);
         m_Move_WASD = m_Move.FindAction("WASD", throwIfNotFound: true);
         m_Move_Height = m_Move.FindAction("Height", throwIfNotFound: true);
+        // Hotkeys
+        m_Hotkeys = asset.FindActionMap("Hotkeys", throwIfNotFound: true);
+        m_Hotkeys_AllSelect = m_Hotkeys.FindAction("AllSelect", throwIfNotFound: true);
     }
 
     ~@InputSettings()
     {
         UnityEngine.Debug.Assert(!m_Mouse.enabled, "This will cause a leak and performance issues, InputSettings.Mouse.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Move.enabled, "This will cause a leak and performance issues, InputSettings.Move.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Hotkeys.enabled, "This will cause a leak and performance issues, InputSettings.Hotkeys.Disable() has not been called.");
     }
 
     public void Dispose()
@@ -462,6 +494,52 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
         }
     }
     public MoveActions @Move => new MoveActions(this);
+
+    // Hotkeys
+    private readonly InputActionMap m_Hotkeys;
+    private List<IHotkeysActions> m_HotkeysActionsCallbackInterfaces = new List<IHotkeysActions>();
+    private readonly InputAction m_Hotkeys_AllSelect;
+    public struct HotkeysActions
+    {
+        private @InputSettings m_Wrapper;
+        public HotkeysActions(@InputSettings wrapper) { m_Wrapper = wrapper; }
+        public InputAction @AllSelect => m_Wrapper.m_Hotkeys_AllSelect;
+        public InputActionMap Get() { return m_Wrapper.m_Hotkeys; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(HotkeysActions set) { return set.Get(); }
+        public void AddCallbacks(IHotkeysActions instance)
+        {
+            if (instance == null || m_Wrapper.m_HotkeysActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_HotkeysActionsCallbackInterfaces.Add(instance);
+            @AllSelect.started += instance.OnAllSelect;
+            @AllSelect.performed += instance.OnAllSelect;
+            @AllSelect.canceled += instance.OnAllSelect;
+        }
+
+        private void UnregisterCallbacks(IHotkeysActions instance)
+        {
+            @AllSelect.started -= instance.OnAllSelect;
+            @AllSelect.performed -= instance.OnAllSelect;
+            @AllSelect.canceled -= instance.OnAllSelect;
+        }
+
+        public void RemoveCallbacks(IHotkeysActions instance)
+        {
+            if (m_Wrapper.m_HotkeysActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IHotkeysActions instance)
+        {
+            foreach (var item in m_Wrapper.m_HotkeysActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_HotkeysActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public HotkeysActions @Hotkeys => new HotkeysActions(this);
     public interface IMouseActions
     {
         void OnDelta(InputAction.CallbackContext context);
@@ -472,5 +550,9 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
     {
         void OnWASD(InputAction.CallbackContext context);
         void OnHeight(InputAction.CallbackContext context);
+    }
+    public interface IHotkeysActions
+    {
+        void OnAllSelect(InputAction.CallbackContext context);
     }
 }

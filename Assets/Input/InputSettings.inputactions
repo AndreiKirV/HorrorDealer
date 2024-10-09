@@ -248,6 +248,34 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "Hotkeys",
+            "id": "191d79d3-2691-42e0-b9bc-9dc84b6906f2",
+            "actions": [
+                {
+                    "name": "AllSelect",
+                    "type": "Button",
+                    "id": "2936ad02-c886-487f-b67e-da427ecfe7e6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "eef61dc9-4ac0-4a31-b192-4cdfddf48918",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AllSelect",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
