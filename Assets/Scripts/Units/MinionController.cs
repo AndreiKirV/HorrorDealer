@@ -10,10 +10,11 @@ public class MinionController : UnitController
     private bool _isControlled = false;
 
     public bool IsControlled => _isControlled;
+    public ItemMB CurrentFetter => _currentFetter;
 
     private InputSettings _input;
     private StateMachine _stateMachine = new StateMachine();
-    public ItemMB _currentFetter;
+    private ItemMB _currentFetter;
 
     bool _isStart = false;
 
@@ -57,10 +58,9 @@ public class MinionController : UnitController
             _currentFetter?.RemoveMinion(this);
             _currentFetter = targetFetter;
             _currentFetter.AddMinion(this);
-            Debug.Log("привязал");
+
+            _stateMachine.SetState(StateDictionary.TetheredNPCState);
         }
-        else
-        Debug.Log("не совпало");
     }
 
     public void Select()
@@ -92,5 +92,6 @@ public class MinionController : UnitController
         _stateMachine.RemoveStates();
         _stateMachine.AddState(StateDictionary.FreeNPCState, new FreeNPCState(_stateMachine, this));
         _stateMachine.AddState(StateDictionary.MoveNPCState, new MoveNPCState(_stateMachine, this));
+         _stateMachine.AddState(StateDictionary.TetheredNPCState, new TetheredNPCState(_stateMachine, this));
     }
 }

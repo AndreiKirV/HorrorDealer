@@ -16,7 +16,7 @@ public class Selecter : MonoBehaviour
 
     public SelectItem SeclectedItem => _selectedItem;
     //public MonoBehaviour _previousSelectedItem;
-    private SelectItem _selectedItem;
+    public SelectItem _selectedItem;
     //private GameObject _point;
     private InputSettings _input;
     private GameObject _point;
@@ -47,7 +47,7 @@ public class Selecter : MonoBehaviour
 
         if (hits.Length > 1)
         {
-            //Debug.Log($"первый {hits[0].collider.gameObject.name} последний {hits[hits.Length - 1].collider.gameObject.name} из {hits.Length}");
+            Array.Sort(hits, (hit1, hit2) => hit1.distance.CompareTo(hit2.distance));
 
             foreach (RaycastHit hit in hits)
             {
@@ -55,6 +55,9 @@ public class Selecter : MonoBehaviour
                 {
                     _settings.UiController.SetTextInfo(item.gameObject.name);
                     Select(item);
+
+                    _point.transform.position = hit.point;
+                    _point.SetActive(true);
                     return;
                 }
             }
@@ -80,7 +83,7 @@ public class Selecter : MonoBehaviour
             if(tempMinion && tempItem && !tempMinion.IsControlled)
             tempMinion.TrySetFetter(tempItem);
 
-            Debug.Log($"выбран {_selectedItem.MB.GetType()} пытаетесь выбрать {item.MB.GetType()}");
+            //Debug.Log($"выбран {_selectedItem.MB.GetType()} пытаетесь выбрать {item.MB.GetType()}");// TODO
         }
 
         _selectedItem = item;
