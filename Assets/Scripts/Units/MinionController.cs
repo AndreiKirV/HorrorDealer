@@ -53,7 +53,7 @@ public class MinionController : UnitController
 
     public void TrySetFetter(ItemMB targetFetter)
     {
-        if (targetFetter.Fetters.Any(item =>  Fetters.Contains(item)))
+        if (targetFetter.Fetters.Any(item =>  Fetters.Contains(item)) && _currentFetter != targetFetter)
         {
             _currentFetter?.RemoveMinion(this);
             _currentFetter = targetFetter;

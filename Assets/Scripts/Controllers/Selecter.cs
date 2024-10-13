@@ -15,9 +15,8 @@ public class Selecter : MonoBehaviour
     }
 
     public SelectItem SeclectedItem => _selectedItem;
-    //public MonoBehaviour _previousSelectedItem;
-    public SelectItem _selectedItem;
-    //private GameObject _point;
+
+    private SelectItem _selectedItem;
     private InputSettings _input;
     private GameObject _point;
 
@@ -38,7 +37,6 @@ public class Selecter : MonoBehaviour
     {
     }
 
-    //TODO кайфуй - ковыряйся
     public void TrySelected(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
         //Debug.Log("TrySelected LB");
