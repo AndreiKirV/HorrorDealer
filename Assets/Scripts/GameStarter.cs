@@ -39,6 +39,7 @@ public class GameStarter : MonoBehaviour
         {
             public List<UnitController> Units = new List<UnitController>();
             public List<ItemMB> Items = new List<ItemMB>();
+            public List <RoomMb> Rooms = new List<RoomMb>();
         }
     }
 

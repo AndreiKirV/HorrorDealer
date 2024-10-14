@@ -39,19 +39,25 @@ public class Selecter : MonoBehaviour
 
     public void TrySelected(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        //Debug.Log("TrySelected LB");
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity, _settings.LayerMask);
+        //Debug.Log($"TrySelected LB {hits.Length}");
 
-        if (hits.Length > 1)
+        if (hits.Length >= 1)
         {
             Array.Sort(hits, (hit1, hit2) => hit1.distance.CompareTo(hit2.distance));
 
             foreach (RaycastHit hit in hits)
             {
-                if (hit.collider.TryGetComponent<SelectItem>(out SelectItem item))
+                //Debug.Log($"{hit.collider.gameObject.name} ");
+
+                if (hit.collider.TryGetComponent<SelectItem>(out SelectItem item))// && item.MB.GetType() != typeof(RoomMb) ^ _selectedItem.MB.GetType() == typeof(MinionController) && _selectedItem.GetComponent<MinionController>().IsControlled)//^
                 {
                     _settings.UiController.SetTextInfo(item.gameObject.name);
+
+                   //_selectedItem.TryGetComponent<MinionController>(out MinionController tempMinion);
+
+                    //if(!minionController || minionController != null && !minionController.IsControlled || item.MB.GetType() != typeof(RoomMb))
                     Select(item);
 
                     _point.transform.position = hit.point;
@@ -76,9 +82,9 @@ public class Selecter : MonoBehaviour
             _selectedItem.Deselected();
 
             MinionController tempMinion = _selectedItem.MB as MinionController;
-            ItemMB tempItem = item.MB as ItemMB;
+            Fetter tempItem = item.Fetter;
 
-            if(tempMinion && tempItem && !tempMinion.IsControlled)
+            if(tempMinion && tempItem && !tempMinion.IsControlled && tempItem)
             tempMinion.TrySetFetter(tempItem);
 
             //Debug.Log($"выбран {_selectedItem.MB.GetType()} пытаетесь выбрать {item.MB.GetType()}");// TODO

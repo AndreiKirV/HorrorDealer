@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class MinionController : UnitController
 {
-    public List<Fetter> Fetters = new List<Fetter>();
+    public List<FetterType> Fetters = new List<FetterType>();
 
     [SerializeField]
     private bool _isControlled = false;
 
     public bool IsControlled => _isControlled;
-    public ItemMB CurrentFetter => _currentFetter;
+    public Fetter CurrentFetter => _currentFetter;
 
     private InputSettings _input;
     private StateMachine _stateMachine = new StateMachine();
-    private ItemMB _currentFetter;
+    private Fetter _currentFetter;
 
     bool _isStart = false;
 
@@ -51,13 +51,13 @@ public class MinionController : UnitController
         _stateMachine.SetState(StateDictionary.FreeNPCState);
     }
 
-    public void TrySetFetter(ItemMB targetFetter)
+    public void TrySetFetter(Fetter targetFetter)
     {
-        if (targetFetter.Fetters.Any(item =>  Fetters.Contains(item)) && _currentFetter != targetFetter)
+        if (targetFetter.Types.Any(item =>  Fetters.Contains(item)) && _currentFetter != targetFetter && !targetFetter.CurrentMinion)
         {
             _currentFetter?.RemoveMinion(this);
             _currentFetter = targetFetter;
-            _currentFetter.AddMinion(this);
+            _currentFetter?.AddMinion(this);
 
             _stateMachine.SetState(StateDictionary.TetheredNPCState);
         }
@@ -66,6 +66,8 @@ public class MinionController : UnitController
     public void Select()
     {
         MB.Outline.enabled = !MB.Outline.enabled;
+
+        if(_isControlled)
         _input.Mouse.LB.canceled += GoMove;
     }
 

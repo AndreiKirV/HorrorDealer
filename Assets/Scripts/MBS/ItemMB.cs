@@ -3,12 +3,10 @@ using UnityEngine;
 
 public class ItemMB : MonoBehaviour
 {
-    public List<Fetter> Fetters = new List<Fetter>();
-    
+    public Fetter Fetter;
+
     public Outline Outline;
     public SelectItem _selectElement;
-
-    public List <MinionController> _currentMinions = new List<MinionController>();
 
     private void Awake()
     {
@@ -39,16 +37,5 @@ public class ItemMB : MonoBehaviour
     public void Deselect()
     {
         Outline.enabled = !Outline.enabled;
-    }
-
-    public void AddMinion(MinionController minion)
-    {
-        if(!_currentMinions.Contains(minion))
-        _currentMinions.Add(minion);
-    }
-
-    public void RemoveMinion(MinionController minion)
-    {
-        _currentMinions.Remove(minion);
     }
 }

@@ -1,13 +1,20 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class SelectItem : MonoBehaviour
 {
+    [SerializeField] private Fetter _fetter;
+
+    public UnityEvent SelectEvent;
+    public UnityEvent DeselectEvent;
+
     public Action SelectAction;
     public Action DeselectAction;
 
     public bool IsSelected => _isSelected;
     public MonoBehaviour MB => _mb;
+    public Fetter Fetter => _fetter;
 
     private bool _isSelected = false;
     private MonoBehaviour _mb;
@@ -21,6 +28,7 @@ public class SelectItem : MonoBehaviour
     {
         _isSelected = false;
 
+        SelectEvent?.Invoke();
         DeselectAction?.Invoke();
     }
 
@@ -28,6 +36,7 @@ public class SelectItem : MonoBehaviour
     {
         _isSelected = true;
 
+        DeselectEvent?.Invoke();
         SelectAction?.Invoke();
     }
 }

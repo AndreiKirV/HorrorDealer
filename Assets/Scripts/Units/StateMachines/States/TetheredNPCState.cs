@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class TetheredNPCState : State
 {
-    private float _offset = 0.01f;
     public TetheredNPCState(StateMachine stateMachine, MinionController unitController) : base(stateMachine, unitController)
     {
     }
@@ -10,9 +9,15 @@ public class TetheredNPCState : State
     public override void Entry()
     {
         base.Entry();
-        float tempOffset = Random.Range(-_offset,_offset);
-        _unitController.transform.position = _unitController.CurrentFetter.transform.position + new Vector3(tempOffset,tempOffset,tempOffset);//TODO пздц - поправить
+        _unitController.MB.Agent.enabled = false;
+
+        if (_unitController.CurrentFetter.TPTransform)
+            _unitController.transform.position = _unitController.CurrentFetter.TPTransform.position;
+        else
+            _unitController.transform.position = _unitController.CurrentFetter.transform.position;
+
         _unitController.MB.Animator.Play("Emergence");//TODO словарь для анимашек
+        _unitController.MB.Agent.enabled = true;
     }
 
     public override void Update()
