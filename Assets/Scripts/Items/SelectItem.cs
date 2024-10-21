@@ -28,7 +28,7 @@ public class SelectItem : MonoBehaviour
     {
         _isSelected = false;
 
-        SelectEvent?.Invoke();
+        DeselectEvent?.Invoke();
         DeselectAction?.Invoke();
     }
 
@@ -36,7 +36,12 @@ public class SelectItem : MonoBehaviour
     {
         _isSelected = true;
 
-        DeselectEvent?.Invoke();
+        SelectEvent?.Invoke();
         SelectAction?.Invoke();
+    }
+
+    public void SetFetter(Fetter fetter)
+    {
+        _fetter = fetter;
     }
 }

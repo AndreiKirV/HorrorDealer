@@ -41,9 +41,10 @@ public class Selecter : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity, _settings.LayerMask);
-        //Debug.Log($"TrySelected LB {hits.Length}");
+        //TODO получать по компонентам
+        Debug.Log($"TrySelected LB {hits.Length}");
 
-        if (hits.Length >= 1)
+        if (hits.Length >= 1)//TODO здесь должен быт ьтоже деселект
         {
             Array.Sort(hits, (hit1, hit2) => hit1.distance.CompareTo(hit2.distance));
 
@@ -86,8 +87,6 @@ public class Selecter : MonoBehaviour
 
             if(tempMinion && tempItem && !tempMinion.IsControlled && tempItem)
             tempMinion.TrySetFetter(tempItem);
-
-            //Debug.Log($"выбран {_selectedItem.MB.GetType()} пытаетесь выбрать {item.MB.GetType()}");// TODO
         }
 
         _selectedItem = item;

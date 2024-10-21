@@ -12,6 +12,8 @@ Shader "Custom/Outline Fill" {
 
     _OutlineColor("Outline Color", Color) = (1, 1, 1, 1)
     _OutlineWidth("Outline Width", Range(0, 10)) = 2
+
+    [Enum(Off, 0, Front, 1, Back, 2)] _CullMode("Render Face", Float) = 2
   }
 
   SubShader {
@@ -25,6 +27,7 @@ Shader "Custom/Outline Fill" {
       Name "Fill"
       Cull front
       ZTest [_ZTest]
+      Cull [_CullMode]
       ZWrite Off
       Blend SrcAlpha OneMinusSrcAlpha
       ColorMask RGB

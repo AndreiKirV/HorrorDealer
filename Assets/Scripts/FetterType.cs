@@ -6,5 +6,6 @@ public enum FetterType
     Water,
     Ground,
     Fire,
-    Electricity
+    Electricity,
+    Room
 }
