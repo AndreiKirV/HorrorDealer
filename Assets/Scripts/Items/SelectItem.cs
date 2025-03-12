@@ -17,7 +17,7 @@ public class SelectItem : MonoBehaviour
     public Fetter Fetter => _fetter;
 
     private bool _isSelected = false;
-    private MonoBehaviour _mb;
+    public MonoBehaviour _mb;
 
     public void Init(MonoBehaviour mb)
     {

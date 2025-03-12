@@ -44,7 +44,7 @@ public class Selecter : MonoBehaviour
         //TODO получать по компонентам
         Debug.Log($"TrySelected LB {hits.Length}");
 
-        if (hits.Length >= 1)//TODO здесь должен быт ьтоже деселект
+        if (hits.Length >= 1)//TODO здесь должен быть тоже деселект
         {
             Array.Sort(hits, (hit1, hit2) => hit1.distance.CompareTo(hit2.distance));
 
